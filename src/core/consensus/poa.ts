@@ -87,7 +87,7 @@ export class ProofOfAuthority extends EventEmitter {
     const validators = this.config.validatorSet;
     const validator = validators[this.currentValidator];
     this.currentValidator = (this.currentValidator + 1) % validators.length;
-    return validator;
+    return validator || '';
   }
 
   public isNodeValidator(): boolean {
