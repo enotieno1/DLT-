@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veridion Chain - M-Pesa Payment Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-item {
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .card-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .mpesa-green {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+        }
+        
+        .mpesa-accent {
+            background: linear-gradient(45deg, #FF9800, #F57C00);
+        }
+        
+        .transaction-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .transaction-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-mpesa {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+        }
+        
+        .btn-mpesa:hover {
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .transaction-list {
+            margin-top: 30px;
+        }
+        
+        .transaction-item {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .transaction-info {
+            flex: 1;
+        }
+        
+        .transaction-amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .transaction-details {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .analytics-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .chart-container {
+            height: 300px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .business-config {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .config-item {
+            background: rgba(76, 175, 80, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .config-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            margin: 50px auto;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">🔗 VERIDION CHAIN</div>
+            <nav class="nav">
+                <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Transactions</div>
+                <div class="nav-item">Business Config</div>
+                <div class="nav-item">Analytics</div>
+                <div class="nav-item">Settings</div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Overview Cards -->
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Total Volume</div>
+                        <div class="card-subtitle">24 Hours</div>
+                    </div>
+                </div>
+                <div class="card-value">KES 15.2M</div>
+                <div class="card-subtitle">+18.5% vs yesterday</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Transactions</div>
+                        <div class="card-subtitle">24 Hours</div>
+                    </div>
+                </div>
+                <div class="card-value">8,947</div>
+                <div class="card-subtitle">97.3% success rate</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Active Users</div>
+                        <div class="card-subtitle">Registered</div>
+                    </div>
+                </div>
+                <div class="card-value">45,231</div>
+                <div class="card-subtitle">+2,341 new today</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Business Accounts</div>
+                        <div class="card-subtitle">Paybill/Till</div>
+                    </div>
+                </div>
+                <div class="card-value">1,847</div>
+                <div class="card-subtitle">23 new this week</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Settlement Time</div>
+                        <div class="card-subtitle">Average</div>
+                    </div>
+                </div>
+                <div class="card-value">2.1s</div>
+                <div class="card-subtitle">Real-time processing</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Fraud Detection</div>
+                        <div class="card-subtitle">Alerts</div>
+                    </div>
+                </div>
+                <div class="card-value">12</div>
+                <div class="card-subtitle">2 high risk</div>
+            </div>
+        </div>
+
+        <!-- Transaction Section -->
+        <div class="transaction-section">
+            <h2>M-Pesa Transaction Processing</h2>
+            
+            <div class="transaction-form">
+                <div class="form-group">
+                    <label>Transaction Type</label>
+                    <select id="transactionType">
+                        <option value="PAYBILL">Paybill</option>
+                        <option value="BUY_GOODS">Buy Goods</option>
+                        <option value="SEND_MONEY">Send Money</option>
+                        <option value="WITHDRAW_CASH">Withdraw Cash</option>
+                        <option value="AIRTIME">Airtime</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="phoneNumber" placeholder="2547XXXXXXXXX" maxlength="12">
+                </div>
+                
+                <div class="form-group">
+                    <label>Amount (KES)</label>
+                    <input type="number" id="amount" placeholder="0.00" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label>Business Number</label>
+                    <input type="text" id="businessNumber" placeholder="Paybill/Till Number">
+                </div>
+                
+                <div class="form-group">
+                    <label>Account Number</label>
+                    <input type="text" id="accountNumber" placeholder="Account Reference">
+                </div>
+                
+                <div class="form-group">
+                    <label>Narrative</label>
+                    <input type="text" id="narrative" placeholder="Transaction description">
+                </div>
+                
+                <div class="form-group" style="align-self: flex-end;">
+                    <button class="btn btn-mpesa" onclick="processMpesaTransaction()">Process Transaction</button>
+                    <button class="btn btn-secondary" onclick="clearMpesaForm()">Clear</button>
+                </div>
+            </div>
+
+            <div id="mpesaAlert"></div>
+
+            <div class="transaction-list" id="transactionList">
+                <h3>Recent M-Pesa Transactions</h3>
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-amount">KES 5,000.00</div>
+                        <div class="transaction-details">
+                            254712345678 → 174379 • Paybill • 2 minutes ago
+                        </div>
+                    </div>
+                    <span class="status-badge status-completed">Completed</span>
+                </div>
+                
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-amount">KES 2,500.00</div>
+                        <div class="transaction-details">
+                            254723456789 → 898321 • Buy Goods • 15 minutes ago
+                        </div>
+                    </div>
+                    <span class="status-badge status-completed">Completed</span>
+                </div>
+                
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-amount">KES 10,000.00</div>
+                        <div class="transaction-details">
+                            254734567890 → 523145 • Send Money • 1 hour ago
+                        </div>
+                    </div>
+                    <span class="status-badge status-pending">Pending</span>
+                </div>
+                
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-amount">KES 1,000.00</div>
+                        <div class="transaction-details">
+                            254745678901 → 174379 • Paybill • 2 hours ago
+                        </div>
+                    </div>
+                    <span class="status-badge status-failed">Failed</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Configuration -->
+        <div class="business-config">
+            <h2>Business Configuration</h2>
+            
+            <div class="config-grid">
+                <div class="config-item">
+                    <div class="config-title">Veridion Chain Ltd</div>
+                    <div><strong>Paybill:</strong> 174379</div>
+                    <div><strong>Business Type:</strong> FINTECH</div>
+                    <div><strong>Status:</strong> Active</div>
+                    <div><strong>Daily Limit:</strong> KES 10M</div>
+                    <div><strong>Commission:</strong> 1.0%</div>
+                </div>
+                
+                <div class="config-item">
+                    <div class="config-title">Sample Retail Store</div>
+                    <div><strong>Till Number:</strong> 898321</div>
+                    <div><strong>Business Type:</strong> RETAIL</div>
+                    <div><strong>Status:</strong> Active</div>
+                    <div><strong>Daily Limit:</strong> KES 500K</div>
+                    <div><strong>Commission:</strong> 1.5%</div>
+                </div>
+                
+                <div class="config-item">
+                    <div class="config-title">Service Provider</div>
+                    <div><strong>Paybill:</strong> 523145</div>
+                    <div><strong>Business Type:</strong> SERVICES</div>
+                    <div><strong>Status:</strong> Active</div>
+                    <div><strong>Daily Limit:</strong> KES 2M</div>
+                    <div><strong>Commission:</strong> 1.2%</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <button class="btn btn-mpesa" onclick="showBusinessConfigModal()">Add New Business</button>
+                <button class="btn btn-secondary" onclick="refreshBusinessConfig()">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div class="analytics-section">
+            <h2>M-Pesa Analytics & Reporting</h2>
+            
+            <div class="chart-container">
+                <canvas id="mpesaVolumeChart" style="width: 100%; height: 100%;"></canvas>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <button class="btn btn-mpesa" onclick="exportMpesaReport()">Export Report</button>
+                <button class="btn btn-secondary" onclick="refreshMpesaAnalytics()">Refresh Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Business Configuration Modal -->
+    <div id="businessConfigModal" class="modal">
+        <div class="modal-content">
+            <h2>Configure New Business</h2>
+            <form id="businessConfigForm">
+                <div class="form-group">
+                    <label>Business Name</label>
+                    <input type="text" id="businessName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Business Number (Paybill/Till)</label>
+                    <input type="text" id="newBusinessNumber" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Business Type</label>
+                    <select id="newBusinessType">
+                        <option value="RETAIL">Retail</option>
+                        <option value="SERVICES">Services</option>
+                        <option value="FINTECH">Fintech</option>
+                        <option value="MANUFACTURING">Manufacturing</option>
+                        <option value="HEALTHCARE">Healthcare</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Daily Transaction Limit (KES)</label>
+                    <input type="number" id="dailyLimit" value="1000000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Commission Rate (%)</label>
+                    <input type="number" id="commissionRate" step="0.1" value="1.0" required>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <button type="submit" class="btn btn-mpesa">Save Configuration</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeBusinessConfigModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let mpesaTransactions = [
+            {
+                id: 'MPESA_001',
+                transactionType: 'PAYBILL',
+                phoneNumber: '254712345678',
+                businessNumber: '174379',
+                amount: 5000,
+                accountNumber: 'VERIDION001',
+                status: 'completed',
+                timestamp: Date.now() - 120000
+            },
+            {
+                id: 'MPESA_002',
+                transactionType: 'BUY_GOODS',
+                phoneNumber: '254723456789',
+                businessNumber: '898321',
+                amount: 2500,
+                accountNumber: '',
+                status: 'completed',
+                timestamp: Date.now() - 900000
+            },
+            {
+                id: 'MPESA_003',
+                transactionType: 'SEND_MONEY',
+                phoneNumber: '254734567890',
+                businessNumber: '523145',
+                amount: 10000,
+                accountNumber: 'TRANSFER001',
+                status: 'pending',
+                timestamp: Date.now() - 3600000
+            },
+            {
+                id: 'MPESA_004',
+                transactionType: 'PAYBILL',
+                phoneNumber: '254745678901',
+                businessNumber: '174379',
+                amount: 1000,
+                accountNumber: 'VERIDION002',
+                status: 'failed',
+                timestamp: Date.now() - 7200000
+            }
+        ];
+
+        function processMpesaTransaction() {
+            const transactionType = document.getElementById('transactionType').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const businessNumber = document.getElementById('businessNumber').value;
+            const accountNumber = document.getElementById('accountNumber').value;
+            const narrative = document.getElementById('narrative').value;
+
+            // Validate phone number
+            if (!phoneNumber || !phoneNumber.match(/^2547\d{8}$/)) {
+                showMpesaAlert('Please enter a valid phone number (2547XXXXXXXXX)', 'warning');
+                return;
+            }
+
+            if (!amount || amount <= 0) {
+                showMpesaAlert('Please enter a valid amount', 'warning');
+                return;
+            }
+
+            if (!businessNumber) {
+                showMpesaAlert('Please enter a business number', 'warning');
+                return;
+            }
+
+            // Simulate transaction processing
+            const transaction = {
+                id: 'MPESA_' + Date.now(),
+                transactionType,
+                phoneNumber,
+                businessNumber,
+                amount,
+                accountNumber,
+                narrative,
+                status: Math.random() > 0.1 ? 'completed' : 'failed',
+                timestamp: Date.now()
+            };
+
+            mpesaTransactions.unshift(transaction);
+            
+            // Update UI
+            updateTransactionList();
+            
+            // Show result
+            if (transaction.status === 'completed') {
+                showMpesaAlert(`Transaction of KES ${amount.toLocaleString()} processed successfully! Transaction ID: ${transaction.id}`, 'success');
+            } else {
+                showMpesaAlert('Transaction failed. Please try again.', 'danger');
+            }
+
+            // Clear form
+            clearMpesaForm();
+            
+            console.log('M-Pesa transaction processed:', transaction);
+        }
+
+        function clearMpesaForm() {
+            document.getElementById('phoneNumber').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('businessNumber').value = '';
+            document.getElementById('accountNumber').value = '';
+            document.getElementById('narrative').value = '';
+            document.getElementById('mpesaAlert').innerHTML = '';
+        }
+
+        function showMpesaAlert(message, type = 'success') {
+            const alertDiv = document.getElementById('mpesaAlert');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = message;
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alertDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        function updateTransactionList() {
+            const listDiv = document.getElementById('transactionList');
+            const recentTransactions = mpesaTransactions.slice(0, 5);
+            
+            const html = recentTransactions.map(tx => {
+                const statusClass = `status-${tx.status}`;
+                const timeAgo = getTimeAgo(tx.timestamp);
+                
+                return `
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-amount">KES ${tx.amount.toLocaleString()}</div>
+                            <div class="transaction-details">
+                                ${tx.phoneNumber} → ${tx.businessNumber} • ${tx.transactionType.replace('_', ' ')} • ${timeAgo}
+                            </div>
+                        </div>
+                        <span class="status-badge ${statusClass}">${tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            listDiv.innerHTML = '<h3>Recent M-Pesa Transactions</h3>' + html;
+        }
+
+        function getTimeAgo(timestamp) {
+            const diff = Date.now() - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            
+            if (minutes < 60) {
+                return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+            } else if (hours < 24) {
+                return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+            } else {
+                return `${Math.floor(hours / 24)} day${Math.floor(hours / 24) !== 1 ? 's' : ''} ago`;
+            }
+        }
+
+        function showBusinessConfigModal() {
+            document.getElementById('businessConfigModal').style.display = 'block';
+        }
+
+        function closeBusinessConfigModal() {
+            document.getElementById('businessConfigModal').style.display = 'none';
+        }
+
+        function refreshBusinessConfig() {
+            console.log('Refreshing business configuration...');
+            // In a real application, this would fetch fresh data from the API
+        }
+
+        function exportMpesaReport() {
+            const reportData = {
+                transactions: mpesaTransactions,
+                statistics: {
+                    totalVolume: mpesaTransactions.reduce((sum, tx) => sum + tx.amount, 0),
+                    successRate: (mpesaTransactions.filter(tx => tx.status === 'completed').length / mpesaTransactions.length) * 100,
+                    totalTransactions: mpesaTransactions.length
+                },
+                exportedAt: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mpesa-report.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            console.log('M-Pesa report exported');
+        }
+
+        function refreshMpesaAnalytics() {
+            console.log('Refreshing M-Pesa analytics...');
+            drawMpesaVolumeChart();
+        }
+
+        function drawMpesaVolumeChart() {
+            const canvas = document.getElementById('mpesaVolumeChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+            
+            // Generate sample data
+            const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const data = [12000000, 14500000, 13200000, 16800000, 15200000, 18900000, 14500000];
+            
+            const maxValue = Math.max(...data);
+            const barWidth = width / (labels.length * 2);
+            const padding = 40;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw bars
+            data.forEach((value, index) => {
+                const barHeight = (value / maxValue) * (height - 40);
+                const x = (index * 2 + 0.5) * barWidth;
+                const y = height - barHeight - 20;
+                
+                // Draw bar
+                const gradient = ctx.createLinearGradient(0, y, 0, height - 20);
+                gradient.addColorStop(0, '#4CAF50');
+                gradient.addColorStop(1, '#45a049');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, y, barWidth, barHeight);
+                
+                // Draw label
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(labels[index], x + barWidth/2, height - 5);
+                
+                // Draw value
+                ctx.fillText('KES ' + (value / 1000000).toFixed(1) + 'M', x + barWidth/2, y - 5);
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('businessConfigForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const configData = {
+                businessName: document.getElementById('businessName').value,
+                businessNumber: document.getElementById('newBusinessNumber').value,
+                businessType: document.getElementById('newBusinessType').value,
+                dailyLimit: parseFloat(document.getElementById('dailyLimit').value),
+                commissionRate: parseFloat(document.getElementById('commissionRate').value)
+            };
+            
+            console.log('Business configuration:', configData);
+            alert(`Business configuration saved for ${configData.businessName}`);
+            closeBusinessConfigModal();
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('businessConfigModal');
+            if (e.target === modal) {
+                closeBusinessConfigModal();
+            }
+        });
+
+        // Add click handlers for navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all items
+                document.querySelectorAll('.nav-item').forEach(nav => nav.style.background = 'transparent');
+                // Add active class to clicked item
+                this.style.background = 'rgba(102, 126, 234, 0.1)';
+                
+                const section = this.textContent;
+                console.log('Navigating to:', section);
+            });
+        });
+
+        // Initialize chart when page loads
+        window.addEventListener('load', function() {
+            drawMpesaVolumeChart();
+        });
+
+        window.addEventListener('resize', function() {
+            drawMpesaVolumeChart();
+        });
+    </script>
+</body>
+</html>

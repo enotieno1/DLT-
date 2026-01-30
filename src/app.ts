@@ -18,6 +18,9 @@ import { APILayer } from './core/api/APILayer';
 import { TokenizationEngine } from './core/tokenization/TokenizationEngine';
 import { AssetMarketplace } from './core/tokenization/AssetMarketplace';
 
+// Import M-Pesa Payment Platform
+import { MpesaPaymentPlatform } from './core/payments/MpesaPaymentPlatform';
+
 // Load environment variables
 config();
 
@@ -36,6 +39,9 @@ class EnterpriseDLTNode {
   // Tokenization Components
   private tokenizationEngine: TokenizationEngine;
   private assetMarketplace: AssetMarketplace;
+  
+  // M-Pesa Payment Platform
+  private mpesaPlatform: MpesaPaymentPlatform;
 
   constructor() {
     this.nodeInfo = {
@@ -96,6 +102,18 @@ class EnterpriseDLTNode {
     this.assetMarketplace = new AssetMarketplace(
       this.tokenizationEngine,
       this.auditTrail
+    );
+
+    // Initialize M-Pesa Payment Platform
+    this.mpesaPlatform = new MpesaPaymentPlatform(
+      this.auditTrail, // Will be replaced with SecureFinancialLedger when available
+      this.auditTrail,
+      this.permissionManager,
+      {
+        apiKey: process.env.MPESA_API_KEY || 'demo_api_key',
+        apiSecret: process.env.MPESA_API_SECRET || 'demo_api_secret',
+        sandboxMode: process.env.MPESA_SANDBOX_MODE === 'true' || true
+      }
     );
 
     // Create default admin user if not exists
@@ -197,6 +215,23 @@ class EnterpriseDLTNode {
         res.setHeader('Content-Type', 'application/json');
         res.writeHead(500);
         res.end(JSON.stringify({ error: 'Investor dashboard not available' }));
+        return;
+      }
+    }
+
+    // Handle M-Pesa dashboard route
+    if (req.url === '/mpesa' && req.method === 'GET') {
+      try {
+        const htmlPath = join(__dirname, '..', 'public', 'mpesa-dashboard.html');
+        const htmlContent = readFileSync(htmlPath, 'utf8');
+        res.setHeader('Content-Type', 'text/html');
+        res.writeHead(200);
+        res.end(htmlContent);
+        return;
+      } catch (error) {
+        res.setHeader('Content-Type', 'application/json');
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: 'M-Pesa dashboard not available' }));
         return;
       }
     }

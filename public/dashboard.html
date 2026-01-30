@@ -39,6 +39,7 @@
             font-weight: bold;
             background: linear-gradient(45deg, #667eea, #764ba2);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
@@ -511,13 +512,32 @@
                 <p style="color: #666; margin-bottom: 20px;">${subtitle}</p>
                 ${productDetails}
                 <div style="margin-top: 30px; text-align: center;">
-                    <button class="btn" onclick="this.closest('div[style*=\"position: fixed\"]').remove()">Close</button>
-                    <button class="btn" style="background: linear-gradient(45deg, #4CAF50, #45a049);">Get Started</button>
+                    <button class="btn" id="closeModal">Close</button>
+                    <button class="btn" id="getStarted" style="background: linear-gradient(45deg, #4CAF50, #45a049);">Get Started</button>
                 </div>
             `;
             
             modal.appendChild(modalContent);
             document.body.appendChild(modal);
+            
+            // Add event listeners for modal buttons after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                const closeBtn = document.getElementById('closeModal');
+                const getStartedBtn = document.getElementById('getStarted');
+                
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        modal.remove();
+                    });
+                }
+                
+                if (getStartedBtn) {
+                    getStartedBtn.addEventListener('click', function() {
+                        alert('Thank you for your interest! Our team will contact you within 24 hours to get started with ' + title + '.');
+                        modal.remove();
+                    });
+                }
+            }, 10);
             
             // Close modal on background click
             modal.addEventListener('click', function(e) {
@@ -753,7 +773,11 @@
                     </div>
                 </div>
             `;
-            drawRevenueChart();
+            
+            // Delay chart drawing to ensure canvas is ready
+            setTimeout(() => {
+                drawRevenueChart();
+            }, 100);
         }
 
         function showSettingsView() {
@@ -842,10 +866,21 @@
 
         function drawRevenueChart() {
             const canvas = document.getElementById('revenueChart');
-            if (!canvas) return;
+            if (!canvas) {
+                console.log('Canvas not found, retrying...');
+                setTimeout(drawRevenueChart, 100);
+                return;
+            }
             
             const ctx = canvas.getContext('2d');
-            const width = canvas.width = canvas.offsetWidth;
+            if (!ctx) {
+                console.log('Could not get canvas context');
+                return;
+            }
+            
+            // Set canvas dimensions
+            const rect = canvas.getBoundingClientRect();
+            const width = canvas.width = rect.width;
             const height = canvas.height = 300;
             
             // Simple bar chart
@@ -854,8 +889,10 @@
             const barWidth = width / (data.length * 2);
             const maxValue = Math.max(...data);
             
+            // Clear canvas
             ctx.clearRect(0, 0, width, height);
             
+            // Draw bars
             data.forEach((value, index) => {
                 const barHeight = (value / maxValue) * (height - 40);
                 const x = (index * 2 + 0.5) * barWidth;
@@ -877,6 +914,8 @@
                 // Draw value
                 ctx.fillText('$' + value + 'M', x + barWidth/2, y - 5);
             });
+            
+            console.log('Revenue chart drawn successfully');
         }
     </script>
 </body>

@@ -39,6 +39,7 @@
             font-weight: bold;
             background: linear-gradient(45deg, #667eea, #764ba2);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
@@ -791,7 +792,7 @@
                 <strong>⚠️ Fraud Risk Alert</strong><br>
                 Risk Level: ${fraudRisk.level.toUpperCase()}<br>
                 Score: ${fraudRisk.score}<br>
-                Reason: ${fraudReason}<br>
+                Reason: ${fraudRisk.reason}<br>
                 Transaction requires manual review.
             `;
         }
