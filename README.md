@@ -1,8 +1,16 @@
-# Enterprise Permissioned DLT System
+# VERIDION CHAIN - Enterprise DLT Solutions
 
-A comprehensive enterprise-grade Distributed Ledger Technology system with permissioned access, Proof of Authority consensus, and role-based access control.
+**Trust Transformed - Enterprise-Grade Distributed Ledger Technology**
 
-## Features
+A comprehensive enterprise-grade DLT platform serving finance, supply chain, identity verification, asset tokenization, digital payments, and government record management.
+
+## 🏢 Business Overview
+
+**Company:** Veridion Chain  
+**Mission:** Transform enterprise operations through secure, scalable, and compliant distributed ledger technology  
+**Target Markets:** Governments, Financial Institutions, Supply Chain, SMEs, Fintech Companies
+
+## 💼 Product Suite
 
 - **Permissioned Network**: Only authorized nodes can participate
 - **Proof of Authority Consensus**: Efficient consensus for enterprise environments

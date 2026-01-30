@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veridion Chain - Investor Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .wallet-address {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .card-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .portfolio-overview {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .asset-item {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .asset-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .asset-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .asset-price {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .asset-change {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+        
+        .positive {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .negative {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .tokenization-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .tokenization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .tokenization-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .tokenization-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .tokenization-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .tokenization-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .tokenization-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            margin: 50px auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .compliance-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .compliance-ok {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .compliance-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .compliance-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .status-ok { background: #28a745; }
+        .status-pending { background: #ffc107; }
+        .status-failed { background: #dc3545; }
+        
+        .trading-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .order-book {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .order-list {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-price {
+            font-weight: bold;
+        }
+        
+        .order-amount {
+            color: #666;
+        }
+        
+        .chart-container {
+            height: 300px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">🔗 VERIDION CHAIN</div>
+            <div class="user-info">
+                <div class="wallet-address">0x742d...8f3a</div>
+                <button class="btn" onclick="showWalletModal()">Wallet</button>
+                <button class="btn btn-secondary" onclick="refreshData()">Refresh</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Portfolio Overview -->
+        <div class="portfolio-overview">
+            <h2>Portfolio Overview</h2>
+            <div class="portfolio-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Total Portfolio Value</div>
+                            <div class="card-subtitle">USD</div>
+                        </div>
+                    </div>
+                    <div class="card-value">$1,247,892</div>
+                    <div class="card-subtitle positive">+12.4% (24h)</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Total Assets</div>
+                            <div class="card-subtitle">Holdings</div>
+                        </div>
+                    </div>
+                    <div class="card-value">8</div>
+                    <div class="card-subtitle">4 tokenized assets</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">24h Volume</div>
+                            <div class="card-subtitle">Traded</div>
+                        </div>
+                    </div>
+                    <div class="card-value">$45,678</div>
+                    <div class="card-subtitle">12 trades</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Compliance Status</div>
+                            <div class="card-subtitle">KYC/AML</div>
+                        </div>
+                    </div>
+                    <div class="card-value">✅ Verified</div>
+                    <div class="card-subtitle">All checks passed</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asset Holdings -->
+        <div class="portfolio-overview">
+            <h2>Asset Holdings</h2>
+            <div class="portfolio-grid">
+                <div class="asset-item">
+                    <div class="asset-name">🏠 Manhattan Tower A</div>
+                    <div class="asset-details">
+                        <span>1,250 tokens</span>
+                        <div>
+                            <span class="asset-price">$850.00</span>
+                            <span class="asset-change positive">+2.3%</span>
+                        </div>
+                    </div>
+                    <div class="asset-details">
+                        <span>Value: $1,062,500</span>
+                        <span>85.2% of portfolio</span>
+                    </div>
+                </div>
+                
+                <div class="asset-item">
+                    <div class="asset-name">🏢 TechCorp Shares</div>
+                    <div class="asset-details">
+                        <span>500 shares</span>
+                        <div>
+                            <span class="asset-price">$125.50</span>
+                            <span class="asset-change positive">+1.8%</span>
+                        </div>
+                    </div>
+                    <div class="asset-details">
+                        <span>Value: $62,750</span>
+                        <span>5.0% of portfolio</span>
+                    </div>
+                </div>
+                
+                <div class="asset-item">
+                    <div class="asset-name">🌾 Gold Tokens</div>
+                    <div class="asset-details">
+                        <span>100 tokens</span>
+                        <div>
+                            <span class="asset-price">$1,950.00</span>
+                            <span class="asset-change negative">-0.5%</span>
+                        </div>
+                    </div>
+                    <div class="asset-details">
+                        <span>Value: $195,000</span>
+                        <span>15.6% of portfolio</span>
+                    </div>
+                </div>
+                
+                <div class="asset-item">
+                    <div class="asset-name">💎 USD Stablecoin</div>
+                    <div class="asset-details">
+                        <span>27,642 USDC</span>
+                        <div>
+                            <span class="asset-price">$1.00</span>
+                            <span class="asset-change positive">0.0%</span>
+                        </div>
+                    </div>
+                    <div class="asset-details">
+                        <span>Value: $27,642</span>
+                        <span>2.2% of portfolio</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tokenization Section -->
+        <div class="tokenization-section">
+            <h2>Tokenize New Assets</h2>
+            <div class="tokenization-grid">
+                <div class="tokenization-card" onclick="showTokenizationModal('real_estate')">
+                    <div class="tokenization-icon">🏠</div>
+                    <div class="tokenization-title">Real Estate</div>
+                    <div class="tokenization-description">Tokenize property ownership with fractional shares</div>
+                </div>
+                
+                <div class="tokenization-card" onclick="showTokenizationModal('company_shares')">
+                    <div class="tokenization-icon">🏢</div>
+                    <div class="tokenization-title">Company Shares</div>
+                    <div class="tokenization-description">Digital representation of company equity</div>
+                </div>
+                
+                <div class="tokenization-card" onclick="showTokenizationModal('commodities')">
+                    <div class="tokenization-icon">🌾</div>
+                    <div class="tokenization-title">Commodities</div>
+                    <div class="tokenization-description">Tokenize gold, silver, oil, and other commodities</div>
+                </div>
+                
+                <div class="tokenization-card" onclick="showTokenizationModal('stablecoin')">
+                    <div class="tokenization-icon">💎</div>
+                    <div class="tokenization-title">Stablecoin</div>
+                    <div class="tokenization-description">Issue digital credits and stablecoins</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trading Section -->
+        <div class="trading-section">
+            <h2>Trading & Marketplace</h2>
+            <div class="order-book">
+                <div class="order-list">
+                    <h3>Buy Orders</h3>
+                    <div class="order-item">
+                        <span class="order-price">$845.00</span>
+                        <span class="order-amount">100 tokens</span>
+                    </div>
+                    <div class="order-item">
+                        <span class="order-price">$842.50</span>
+                        <span class="order-amount">250 tokens</span>
+                    </div>
+                    <div class="order-item">
+                        <span class="order-price">$840.00</span>
+                        <span class="order-amount">500 tokens</span>
+                    </div>
+                </div>
+                
+                <div class="order-list">
+                    <h3>Sell Orders</h3>
+                    <div class="order-item">
+                        <span class="order-price">$855.00</span>
+                        <span class="order-amount">150 tokens</span>
+                    </div>
+                    <div class="order-item">
+                        <span class="order-price">$860.00</span>
+                        <span class="order-amount">300 tokens</span>
+                    </div>
+                    <div class="order-item">
+                        <span class="order-price">$865.00</span>
+                        <span class="order-amount">200 tokens</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="priceChart" style="width: 100%; height: 100%;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tokenization Modal -->
+    <div id="tokenizationModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Tokenize Asset</h2>
+            <form id="tokenizationForm">
+                <div class="form-group">
+                    <label>Asset Name</label>
+                    <input type="text" id="assetName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Symbol</label>
+                    <input type="text" id="assetSymbol" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Total Supply</label>
+                    <input type="number" id="totalSupply" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Price per Token</label>
+                    <input type="number" id="tokenPrice" step="0.01" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="assetDescription" required></textarea>
+                </div>
+                
+                <div id="assetSpecificFields"></div>
+                
+                <div class="compliance-status compliance-ok">
+                    <div class="status-indicator status-ok"></div>
+                    <span>Compliance Check: Ready</span>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <button type="submit" class="btn">Tokenize Asset</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentAssetType = '';
+
+        function showTokenizationModal(assetType) {
+            currentAssetType = assetType;
+            const modal = document.getElementById('tokenizationModal');
+            const title = document.getElementById('modalTitle');
+            const specificFields = document.getElementById('assetSpecificFields');
+            
+            title.textContent = `Tokenize ${assetType.replace('_', ' ').toUpperCase()}`;
+            
+            // Add asset-specific fields
+            specificFields.innerHTML = '';
+            
+            switch(assetType) {
+                case 'real_estate':
+                    specificFields.innerHTML = `
+                        <div class="form-group">
+                            <label>Property Address</label>
+                            <input type="text" id="propertyAddress" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Property Type</label>
+                            <select id="propertyType">
+                                <option value="residential">Residential</option>
+                                <option value="commercial">Commercial</option>
+                                <option value="industrial">Industrial</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Square Footage</label>
+                            <input type="number" id="squareFootage" required>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'company_shares':
+                    specificFields.innerHTML = `
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="companyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>ISIN</label>
+                            <input type="text" id="isin" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Share Class</label>
+                            <select id="shareClass">
+                                <option value="common">Common</option>
+                                <option value="preferred">Preferred</option>
+                            </select>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'commodities':
+                    specificFields.innerHTML = `
+                        <div class="form-group">
+                            <label>Commodity Type</label>
+                            <select id="commodityType">
+                                <option value="gold">Gold</option>
+                                <option value="silver">Silver</option>
+                                <option value="oil">Crude Oil</option>
+                                <option value="wheat">Wheat</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" id="quantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Storage Location</label>
+                            <input type="text" id="storageLocation" required>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'stablecoin':
+                    specificFields.innerHTML = `
+                        <div class="form-group">
+                            <label>Backing Asset</label>
+                            <select id="backingAsset">
+                                <option value="usd">USD</option>
+                                <option value="eur">EUR</option>
+                                <option value="gold">Gold</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Reserve Ratio (%)</label>
+                            <input type="number" id="reserveRatio" min="80" max="100" value="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Auditor</label>
+                            <input type="text" id="auditor" required>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('tokenizationModal').style.display = 'none';
+        }
+
+        function showWalletModal() {
+            alert('Wallet functionality would show detailed balance, transaction history, and wallet management');
+        }
+
+        function refreshData() {
+            // Simulate data refresh
+            console.log('Refreshing portfolio data...');
+            // In a real application, this would fetch fresh data from the API
+        }
+
+        // Handle form submission
+        document.getElementById('tokenizationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                assetType: currentAssetType,
+                name: document.getElementById('assetName').value,
+                symbol: document.getElementById('assetSymbol').value,
+                totalSupply: parseInt(document.getElementById('totalSupply').value),
+                price: parseFloat(document.getElementById('tokenPrice').value),
+                description: document.getElementById('assetDescription').value
+            };
+            
+            console.log('Tokenization request:', formData);
+            alert(`Tokenization request submitted for ${formData.name} (${formData.symbol})`);
+            closeModal();
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('tokenizationModal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Simple price chart
+        function drawPriceChart() {
+            const canvas = document.getElementById('priceChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+            
+            // Draw simple line chart
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            const points = [850, 845, 848, 852, 849, 855, 853, 858, 856, 860];
+            const stepX = width / (points.length - 1);
+            const minY = Math.min(...points);
+            const maxY = Math.max(...points);
+            const rangeY = maxY - minY;
+            
+            points.forEach((price, i) => {
+                const x = i * stepX;
+                const y = height - ((price - minY) / rangeY) * (height - 40) - 20;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+        }
+
+        // Initialize chart when page loads
+        window.addEventListener('load', drawPriceChart);
+        window.addEventListener('resize', drawPriceChart);
+    </script>
+</body>
+</html>
