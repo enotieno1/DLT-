@@ -1,0 +1,14 @@
+export { KYCSystem, KYCConfig, KYCRequest, PersonalInfo, KYCDocument, BiometricData, BackgroundCheckRequest, RiskAssessment, KYCVerificationResult } from './KYCSystem';
+export { AMLSystem, AMLConfig, AMLThresholds, SuspiciousPattern, AlertThresholds, AMLAlert, TransactionAnalysis, RiskFactor, AMLReport } from './AMLSystem';
+export { AuditTrailSystem, AuditConfig, AuditLog, Actor, AuditQuery, AuditReport, ReportSummary, ReportStatistics } from './AuditTrailSystem';
+export { AccessControl, AccessControlConfig, Role, Permission, User, Session, AccessRequest, AccessPolicy } from './AccessControl';
+export { ComplianceReporting, ReportingConfig, ComplianceReport, ReportSection, ReportMetrics, ComplianceViolation } from './ComplianceReporting';
+export { RegulatoryDashboard, DashboardConfig, WidgetConfig, DashboardData, KYCDashboardData, AMLDashboardData, AuditDashboardData, AccessDashboardData, ComplianceScoreData, ViolationData, MetricsData, AlertData, ChartData } from './RegulatoryDashboard';
+
+// Re-export commonly used types
+export type { KYCConfig as IKYCConfig, KYCRequest as IKYCRequest, PersonalInfo as IPersonalInfo, KYCDocument as IKYCDocument, BiometricData as IBiometricData, BackgroundCheckRequest as IBackgroundCheckRequest, RiskAssessment as IRiskAssessment, KYCVerificationResult as IKYCVerificationResult } from './KYCSystem';
+export type { AMLConfig as IAMLConfig, AMLThresholds as IAMLThresholds, SuspiciousPattern as ISuspiciousPattern, AlertThresholds as IAlertThresholds, AMLAlert as IAMLAlert, TransactionAnalysis as ITransactionAnalysis, RiskFactor as IRiskFactor, AMLReport as IAMLReport } from './AMLSystem';
+export type { AuditConfig as IAuditConfig, AuditLog as IAuditLog, Actor as IActor, AuditQuery as IAuditQuery, AuditReport as IAuditReport, ReportSummary as IReportSummary, ReportStatistics as IReportStatistics } from './AuditTrailSystem';
+export type { AccessControlConfig as IAccessControlConfig, Role as IRole, Permission as IPermission, User as IUser, Session as ISession, AccessRequest as IAccessRequest, AccessPolicy as IAccessPolicy } from './AccessControl';
+export type { ReportingConfig as IReportingConfig, ComplianceReport as IComplianceReport, ReportSection as IReportSection, ReportMetrics as IReportMetrics, ComplianceViolation as IComplianceViolation } from './ComplianceReporting';
+export type { DashboardConfig as IDashboardConfig, WidgetConfig as IWidgetConfig, DashboardData as IDashboardData, KYCDashboardData as IKYCDashboardData, AMLDashboardData as IAMLDashboardData, AuditDashboardData as IAuditDashboardData, AccessDashboardData as IAccessDashboardData, ComplianceScoreData as IComplianceScoreData, ViolationData as IViolationData, MetricsData as IMetricsData, AlertData as IAlertData, ChartData as IChartData } from './RegulatoryDashboard';

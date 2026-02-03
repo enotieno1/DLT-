@@ -20,28 +20,61 @@ Target Markets: Governments, Financial Institutions, Supply Chain, SMEs, Fintech
 - Audit Logging: Comprehensive tamper-evident audit trail
 - P2P Network: Secure peer-to-peer communication
 - REST API: HTTP interface for external applications
+=======
+**Company:** Veridion Chain  
+**Mission:** Transform enterprise operations through secure, scalable, and compliant distributed ledger technology  
+**Target Markets:** Governments, Financial Institutions, Supply Chain, SMEs, Fintech Companies
+
+## 💼 Product Suite
+
+- **Permissioned Network**: Only authorized nodes can participate
+- **Proof of Authority Consensus**: Efficient consensus for enterprise environments
+- **Role-Based Access Control**: Granular permissions (Admin, Validator, User, Auditor)
+- **Digital Signatures**: ECDSA cryptographic signatures
+- **Immutable Ledger**: Cryptographically secured blockchain
+- **Audit Logging**: Comprehensive tamper-evident audit trail
+- **P2P Network**: Secure peer-to-peer communication
+- **REST API**: HTTP interface for external applications
+>>>>>>> 8e112d1604ce3e9da87bc6f846767ac082e7babf
 
 ## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
+<<<<<<< HEAD
 │                    Enterprise DLT Network                        │
 ├─────────────────────────────────────────────────────────────────┤
 │ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────┐ │
 │ │   Node A    │ │   Node B    │ │   Node C    │ │ Node D  │ │
 │ │ (Authority) │ │ (Validator) │ │ (Validator) │ │ (Peer)  │ │
 │ └─────────────┘ └─────────────┘ └─────────────┘ └─────────┘ │
+=======
+│                    Enterprise DLT Network                       │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────┐ │
+│  │   Node A    │  │   Node B    │  │   Node C    │  │ Node D  │ │
+│  │ (Authority) │  │ (Validator) │  │ (Validator) │  │(Peer)   │ │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────┘ │
+>>>>>>> 8e112d1604ce3e9da87bc6f846767ac082e7babf
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ## Quick Start
 
 ### Prerequisites
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8e112d1604ce3e9da87bc6f846767ac082e7babf
 - Node.js 16.0.0 or higher
 - TypeScript 5.0.0 or higher
 - Git
 
 ### Installation
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8e112d1604ce3e9da87bc6f846767ac082e7babf
 ```bash
 # Clone the repository
 git clone https://github.com/enotieno1/enterprise-dlt.git
@@ -58,9 +91,16 @@ cp .env.example .env
 ```
 
 ### Configuration
+<<<<<<< HEAD
 Edit the .env file to configure your node:
 
 ```
+=======
+
+Edit the `.env` file to configure your node:
+
+```env
+>>>>>>> 8e112d1604ce3e9da87bc6f846767ac082e7babf
 NODE_ID=node-1
 NODE_ADDRESS=localhost
 NODE_PORT=3000
@@ -69,6 +109,10 @@ VALIDATOR_SET=node-1,node-2,node-3
 ```
 
 ### Running the Node
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8e112d1604ce3e9da87bc6f846767ac082e7babf
 ```bash
 # Development mode
 npm run dev
@@ -83,6 +127,7 @@ npm test
 ## API Endpoints
 
 ### Health Check
+<<<<<<< HEAD
 - `GET /health` - Check node health status
 
 ### Get Validators
@@ -129,10 +174,68 @@ The network uses Proof of Authority (PoA) consensus:
 - Immutable audit trail
 - Secure P2P communication
 - Permissioned network access
+=======
+```
+GET /health
+```
+
+### Get Validators
+```
+GET /validators
+```
+
+### Submit Transaction
+```
+POST /transactions
+Content-Type: application/json
+
+{
+  "from": "0x...",
+  "to": "0x...",
+  "value": "1000",
+  "data": "0x...",
+  "signature": "0x..."
+}
+```
+
+### Get Block
+```
+GET /blocks/:number
+```
+
+### Get Transaction
+```
+GET /transactions/:hash
+```
+
+## Node Roles
+
+- **Authority**: Can propose blocks and participate in consensus
+- **Validator**: Can validate blocks and participate in consensus
+- **Peer**: Can receive blocks and transactions, but cannot participate in consensus
+
+## Consensus Mechanism
+
+The system uses Proof of Authority (PoA) consensus:
+
+1. **Authority Selection**: Round-robin selection among authorized nodes
+2. **Block Proposal**: Selected authority creates block from transaction pool
+3. **Validation**: Other validators verify block integrity
+4. **Voting**: Validators vote on block validity
+5. **Finalization**: Block added to chain upon consensus
+
+## Security Features
+
+- **Digital Signatures**: ECDSA with secp256k1 curve
+- **Hash Algorithm**: SHA-256 for blocks, Keccak-256 for transactions
+- **Encryption**: TLS 1.3 for P2P communication
+- **Access Control**: JWT tokens with role-based permissions
+>>>>>>> 8e112d1604ce3e9da87bc6f846767ac082e7babf
 
 ## Development
 
 ### Project Structure
+<<<<<<< HEAD
 ```
 src/
 ├── core/           # Core blockchain logic
@@ -144,16 +247,48 @@ src/
 ```
 
 ### Building
+=======
+
+```
+src/
+├── core/                 # Core blockchain logic
+│   ├── blockchain/       # Blockchain management
+│   ├── consensus/        # Consensus mechanisms
+│   ├── crypto/          # Cryptographic utilities
+│   └── types/           # Type definitions
+├── network/             # P2P networking
+├── api/                 # External API layer
+├── auth/                # Authentication & authorization
+├── storage/             # Data persistence
+├── config/              # Configuration management
+├── utils/               # Utility functions
+└── monitoring/          # Monitoring & metrics
+```
+
+### Building
+
+>>>>>>> 8e112d1604ce3e9da87bc6f846767ac082e7babf
 ```bash
 npm run build
 ```
 
 ### Testing
+<<<<<<< HEAD
 ```bash
 npm test
 ```
 
 ### Linting
+=======
+
+```bash
+npm test
+npm run test:watch
+```
+
+### Linting
+
+>>>>>>> 8e112d1604ce3e9da87bc6f846767ac082e7babf
 ```bash
 npm run lint
 npm run lint:fix
@@ -163,6 +298,7 @@ npm run lint:fix
 
 ```bash
 # Build Docker image
+<<<<<<< HEAD
 docker build -t veridion-chain .
 
 # Run container
@@ -201,3 +337,46 @@ VERIDION CHAIN is developed by the enterprise DLT team at Veridion, bringing tog
 - [API Reference](https://api.veridion-chain.com)
 - [Whitepaper](https://whitepaper.veridion-chain.com)
 - [Community Forum](https://community.veridion-chain.com)
+=======
+npm run docker:build
+
+# Run with Docker Compose
+npm run docker:run
+```
+
+## Configuration Options
+
+| Environment Variable | Description | Default |
+|---------------------|-------------|---------|
+| NODE_ID | Unique node identifier | node-1 |
+| NODE_ADDRESS | Node IP address | localhost |
+| NODE_PORT | Node port | 3000 |
+| NODE_ROLE | Node role (authority/validator/peer) | peer |
+| BLOCK_TIME | Block creation interval (ms) | 5000 |
+| VALIDATOR_SET | Comma-separated validator IDs | - |
+| BLOCK_GAS_LIMIT | Maximum gas per block | 1000000 |
+| MIN_VALIDATORS | Minimum validators for consensus | 3 |
+
+## Performance
+
+- **Throughput**: 1000+ transactions/second
+- **Latency**: <5 seconds for transaction confirmation
+- **Block Time**: 5 seconds (configurable)
+- **Network**: Minimum 3 nodes for redundancy
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
+
+## Support
+
+For support and questions, please open an issue on GitHub.
+>>>>>>> 8e112d1604ce3e9da87bc6f846767ac082e7babf

@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veridion Chain - Enterprise DLT Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-item {
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+        
+        .finance { background: linear-gradient(45deg, #FF6B6B, #FF8E53); }
+        .supply { background: linear-gradient(45deg, #4ECDC4, #44A08D); }
+        .identity { background: linear-gradient(45deg, #667eea, #764ba2); }
+        .assets { background: linear-gradient(45deg, #F093FB, #F5576C); }
+        .payments { background: linear-gradient(45deg, #4FACFE, #00F2FE); }
+        .government { background: linear-gradient(45deg, #43E97B, #38F9D7); }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .card-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .metric {
+            text-align: center;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 10px;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-online { background: #4CAF50; }
+        .status-processing { background: #FF9800; }
+        .status-offline { background: #F44336; }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .activity-feed {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .activity-time {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .revenue-chart {
+            height: 200px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">🔗 VERIDION CHAIN</div>
+            <nav class="nav">
+                <div class="nav-item">Dashboard</div>
+                <div class="nav-item">Products</div>
+                <div class="nav-item">Analytics</div>
+                <div class="nav-item">Settings</div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-grid">
+            <!-- Veridion Finance -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon finance">💰</div>
+                    <div>
+                        <div class="card-title">Veridion Finance</div>
+                        <div class="card-subtitle">Enterprise Financial DLT</div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-value">$2.5M</div>
+                        <div class="metric-label">Revenue YTD</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">15</div>
+                        <div class="metric-label">Active Clients</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <span class="status-indicator status-online"></span>
+                    <span>All systems operational</span>
+                </div>
+                <button class="btn">View Details</button>
+            </div>
+
+            <!-- Veridion Supply -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon supply">🚚</div>
+                    <div>
+                        <div class="card-title">Veridion Supply</div>
+                        <div class="card-subtitle">Supply Chain Transparency</div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-value">1.2M</div>
+                        <div class="metric-label">Products Tracked</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">30</div>
+                        <div class="metric-label">Supply Chain Clients</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <span class="status-indicator status-online"></span>
+                    <span>Real-time tracking active</span>
+                </div>
+                <button class="btn">View Details</button>
+            </div>
+
+            <!-- Veridion ID -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon identity">🆔</div>
+                    <div>
+                        <div class="card-title">Veridion ID</div>
+                        <div class="card-subtitle">Digital Identity Verification</div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-value">500K</div>
+                        <div class="metric-label">Verified Identities</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">99.9%</div>
+                        <div class="metric-label">Accuracy Rate</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <span class="status-indicator status-online"></span>
+                    <span>GDPR compliant</span>
+                </div>
+                <button class="btn">View Details</button>
+            </div>
+
+            <!-- Veridion Assets -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon assets">🏠</div>
+                    <div>
+                        <div class="card-title">Veridion Assets</div>
+                        <div class="card-subtitle">Asset Tokenization Platform</div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-value">$850M</div>
+                        <div class="metric-label">Tokenized Assets</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">2.0%</div>
+                        <div class="metric-label">Transaction Fee</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <span class="status-indicator status-processing"></span>
+                    <span>Processing transactions</span>
+                </div>
+                <button class="btn">View Details</button>
+            </div>
+
+            <!-- Veridion Pay -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon payments">💳</div>
+                    <div>
+                        <div class="card-title">Veridion Pay</div>
+                        <div class="card-subtitle">Digital Payment Infrastructure</div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-value">10K</div>
+                        <div class="metric-label">TPS Capacity</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">0.5%</div>
+                        <div class="metric-label">Processing Fee</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <span class="status-indicator status-online"></span>
+                    <span>Payments processing</span>
+                </div>
+                <button class="btn">View Details</button>
+            </div>
+
+            <!-- Veridion Gov -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon government">🏛️</div>
+                    <div>
+                        <div class="card-title">Veridion Gov</div>
+                        <div class="card-subtitle">Government Record Management</div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-value">8</div>
+                        <div class="metric-label">Government Contracts</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">$1.1M</div>
+                        <div class="metric-label">Contract Value</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <span class="status-indicator status-online"></span>
+                    <span>Compliance verified</span>
+                </div>
+                <button class="btn">View Details</button>
+            </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="activity-feed">
+            <h3 style="margin-bottom: 20px;">Recent Activity</h3>
+            
+            <div class="activity-item">
+                <div class="activity-icon finance">💰</div>
+                <div class="activity-content">
+                    <div class="activity-title">New finance client onboarded</div>
+                    <div class="activity-time">Major European Bank - 2 hours ago</div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon supply">🚚</div>
+                <div class="activity-content">
+                    <div class="activity-title">Supply chain milestone reached</div>
+                    <div class="activity-time">1M products tracked - 5 hours ago</div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon identity">🆔</div>
+                <div class="activity-content">
+                    <div class="activity-title">Identity verification system updated</div>
+                    <div class="activity-time">New biometric features deployed - 1 day ago</div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon assets">🏠</div>
+                <div class="activity-content">
+                    <div class="activity-title">Real estate tokenization completed</div>
+                    <div class="activity-time">$50M property tokenized - 2 days ago</div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon government">🏛️</div>
+                <div class="activity-content">
+                    <div class="activity-title">Government contract signed</div>
+                    <div class="activity-time">Land registry digitization - 3 days ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate real-time updates
+        function updateMetrics() {
+            const metrics = document.querySelectorAll('.metric-value');
+            metrics.forEach(metric => {
+                if (metric.textContent.includes('$')) {
+                    const currentValue = parseFloat(metric.textContent.replace(/[$M,]/g, ''));
+                    const change = (Math.random() - 0.5) * 0.1;
+                    const newValue = Math.max(0, currentValue + change);
+                    metric.textContent = '$' + newValue.toFixed(1) + 'M';
+                }
+            });
+        }
+
+        // Update metrics every 5 seconds
+        setInterval(updateMetrics, 5000);
+
+        // Add click handlers for buttons
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const card = this.closest('.card');
+                const cardTitle = card.querySelector('.card-title').textContent;
+                const cardSubtitle = card.querySelector('.card-subtitle').textContent;
+                
+                // Show detailed product modal
+                showProductModal(cardTitle, cardSubtitle);
+            });
+        });
+
+        function showProductModal(title, subtitle) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            `;
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: white;
+                padding: 40px;
+                border-radius: 20px;
+                max-width: 600px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+            `;
+            
+            const productDetails = getProductDetails(title);
+            
+            modalContent.innerHTML = `
+                <h2 style="margin-bottom: 10px; color: #333;">${title}</h2>
+                <p style="color: #666; margin-bottom: 20px;">${subtitle}</p>
+                ${productDetails}
+                <div style="margin-top: 30px; text-align: center;">
+                    <button class="btn" id="closeModal">Close</button>
+                    <button class="btn" id="getStarted" style="background: linear-gradient(45deg, #4CAF50, #45a049);">Get Started</button>
+                </div>
+            `;
+            
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            // Add event listeners for modal buttons after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                const closeBtn = document.getElementById('closeModal');
+                const getStartedBtn = document.getElementById('getStarted');
+                
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        modal.remove();
+                    });
+                }
+                
+                if (getStartedBtn) {
+                    getStartedBtn.addEventListener('click', function() {
+                        alert('Thank you for your interest! Our team will contact you within 24 hours to get started with ' + title + '.');
+                        modal.remove();
+                    });
+                }
+            }, 10);
+            
+            // Close modal on background click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        function getProductDetails(title) {
+            const details = {
+                'Veridion Finance': `
+                    <div style="margin-bottom: 20px;">
+                        <h3>Enterprise Financial DLT Platform</h3>
+                        <p>Revolutionize your financial operations with our enterprise-grade distributed ledger technology.</p>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Key Features:</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">✅ Cross-border payment settlement</li>
+                            <li style="padding: 8px 0;">✅ Trade finance automation</li>
+                            <li style="padding: 8px 0;">✅ Digital asset management</li>
+                            <li style="padding: 8px 0;">✅ Regulatory reporting automation</li>
+                            <li style="padding: 8px 0;">✅ KYC/AML compliance integration</li>
+                        </ul>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Pricing:</h4>
+                        <p><strong>Setup:</strong> $50,000 | <strong>Monthly:</strong> $10,000 per 1,000 transactions</p>
+                    </div>
+                    <div>
+                        <h4>Current Clients:</h4>
+                        <p>15 major financial institutions including banks, payment processors, and fintech companies.</p>
+                    </div>
+                `,
+                'Veridion Supply': `
+                    <div style="margin-bottom: 20px;">
+                        <h3>Supply Chain Transparency Platform</h3>
+                        <p>Complete visibility and traceability across your entire supply chain ecosystem.</p>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Key Features:</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">✅ End-to-end product tracking</li>
+                            <li style="padding: 8px 0;">✅ Quality assurance verification</li>
+                            <li style="padding: 8px 0;">✅ Compliance documentation</li>
+                            <li style="padding: 8px 0;">✅ Real-time inventory management</li>
+                            <li style="padding: 8px 0;">✅ Smart contract automation</li>
+                        </ul>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Pricing:</h4>
+                        <p><strong>Setup:</strong> $25,000 | <strong>Monthly:</strong> $5,000 per 500 SKUs</p>
+                    </div>
+                    <div>
+                        <h4>Track Record:</h4>
+                        <p>1.2M+ products tracked with 99.8% traceability accuracy across 150+ supply chain partners.</p>
+                    </div>
+                `,
+                'Veridion ID': `
+                    <div style="margin-bottom: 20px;">
+                        <h3>Digital Identity Verification System</h3>
+                        <p>Secure, privacy-first identity management for the digital age.</p>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Key Features:</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">✅ Self-sovereign identity (SSI)</li>
+                            <li style="padding: 8px 0;">✅ Biometric verification</li>
+                            <li style="padding: 8px 0;">✅ Cross-border identity validation</li>
+                            <li style="padding: 8px 0;">✅ Enterprise credential management</li>
+                            <li style="padding: 8px 0;">✅ GDPR/CCPA compliant</li>
+                        </ul>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Pricing:</h4>
+                        <p><strong>Setup:</strong> $15,000 | <strong>Monthly:</strong> $3,000 per 10,000 identities</p>
+                    </div>
+                    <div>
+                        <h4>Performance:</h4>
+                        <p>500K+ verified identities with 99.9% accuracy rate and zero data breaches.</p>
+                    </div>
+                `,
+                'Veridion Assets': `
+                    <div style="margin-bottom: 20px;">
+                        <h3>Asset Tokenization Platform</h3>
+                        <p>Transform illiquid assets into tradable digital tokens.</p>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Key Features:</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">✅ Real estate tokenization</li>
+                            <li style="padding: 8px 0;">✅ Commodity digitization</li>
+                            <li style="padding: 8px 0;">✅ Intellectual property NFTs</li>
+                            <li style="padding: 8px 0;">✅ Fractional ownership</li>
+                            <li style="padding: 8px 0;">✅ Secondary market trading</li>
+                        </ul>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Pricing:</h4>
+                        <p><strong>Setup:</strong> $20,000 | <strong>Transaction Fee:</strong> 2%</p>
+                    </div>
+                    <div>
+                        <h4>Assets Under Management:</h4>
+                        <p>$850M+ tokenized assets including real estate, commodities, and intellectual property.</p>
+                    </div>
+                `,
+                'Veridion Pay': `
+                    <div style="margin-bottom: 20px;">
+                        <h3>Digital Payment Infrastructure</h3>
+                        <p>Next-generation payment processing for the digital economy.</p>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Key Features:</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">✅ CBDC integration</li>
+                            <li style="padding: 8px 0;">✅ Stablecoin processing</li>
+                            <li style="padding: 8px 0;">✅ Micropayment solutions</li>
+                            <li style="padding: 8px 0;">✅ Cross-border remittances</li>
+                            <li style="padding: 8px 0;">✅ Merchant API integration</li>
+                        </ul>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Pricing:</h4>
+                        <p><strong>Processing Fee:</strong> 0.5% | <strong>API Access:</strong> Custom pricing</p>
+                    </div>
+                    <div>
+                        <h4>Performance:</h4>
+                        <p>10,000+ TPS capacity with sub-second settlement times and 99.99% uptime.</p>
+                    </div>
+                `,
+                'Veridion Gov': `
+                    <div style="margin-bottom: 20px;">
+                        <h3>Government Record Management</h3>
+                        <p>Secure, transparent, and efficient public sector solutions.</p>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Key Features:</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">✅ Land registry digitization</li>
+                            <li style="padding: 8px 0;">✅ Vital records management</li>
+                            <li style="padding: 8px 0;">✅ Tax collection automation</li>
+                            <li style="padding: 8px 0;">✅ Voting system integrity</li>
+                            <li style="padding: 8px 0;">✅ Public service transparency</li>
+                        </ul>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Pricing:</h4>
+                        <p><strong>Government Contracts:</strong> $100,000+ (custom pricing based on scope)</p>
+                    </div>
+                    <div>
+                        <h4>Government Partners:</h4>
+                        <p>8 active government contracts with total value of $1.1M for land registry and tax systems.</p>
+                    </div>
+                `
+            };
+            
+            return details[title] || '<p>Product details not available.</p>';
+        }
+
+        // Add click handlers for navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all items
+                document.querySelectorAll('.nav-item').forEach(nav => nav.style.background = 'transparent');
+                // Add active class to clicked item
+                this.style.background = 'rgba(102, 126, 234, 0.1)';
+                
+                const section = this.textContent;
+                console.log('Navigating to:', section);
+                
+                // Show different content based on navigation
+                if (section === 'Dashboard') {
+                    showMainDashboard();
+                } else if (section === 'Products') {
+                    showProductsView();
+                } else if (section === 'Analytics') {
+                    showAnalyticsView();
+                } else if (section === 'Settings') {
+                    showSettingsView();
+                }
+            });
+        });
+
+        function showMainDashboard() {
+            document.querySelector('.dashboard-grid').style.display = 'grid';
+            document.querySelector('.activity-feed').style.display = 'block';
+        }
+
+        function showProductsView() {
+            document.querySelector('.dashboard-grid').style.display = 'grid';
+            document.querySelector('.activity-feed').style.display = 'none';
+            
+            // Update cards to show product details
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title').textContent;
+                if (title.includes('Finance')) {
+                    updateCardForFinance(card);
+                } else if (title.includes('Supply')) {
+                    updateCardForSupply(card);
+                }
+                // Add more product-specific updates
+            });
+        }
+
+        function showAnalyticsView() {
+            document.querySelector('.dashboard-grid').style.display = 'none';
+            document.querySelector('.activity-feed').innerHTML = `
+                <h3>Revenue Analytics</h3>
+                <div class="revenue-chart">
+                    <canvas id="revenueChart" style="width: 100%; height: 300px;"></canvas>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h4>Key Performance Indicators</h4>
+                    <div class="metrics" style="grid-template-columns: repeat(4, 1fr); margin-top: 20px;">
+                        <div class="metric">
+                            <div class="metric-value">87%</div>
+                            <div class="metric-label">Client Satisfaction</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">99.9%</div>
+                            <div class="metric-label">Uptime</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">2.3s</div>
+                            <div class="metric-label">Avg Response</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">450%</div>
+                            <div class="metric-label">YoY Growth</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Delay chart drawing to ensure canvas is ready
+            setTimeout(() => {
+                drawRevenueChart();
+            }, 100);
+        }
+
+        function showSettingsView() {
+            document.querySelector('.dashboard-grid').style.display = 'none';
+            document.querySelector('.activity-feed').innerHTML = `
+                <h3>System Settings</h3>
+                <div style="padding: 20px;">
+                    <div style="margin-bottom: 20px;">
+                        <h4>Network Configuration</h4>
+                        <div style="margin-top: 10px;">
+                            <label>Node ID: <input type="text" value="veridion-main-node" style="margin-left: 10px; padding: 5px;"></label>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label>Consensus: <select style="margin-left: 10px; padding: 5px;">
+                                <option>Proof of Authority</option>
+                                <option>Byzantine Fault Tolerance</option>
+                            </select></label>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Security Settings</h4>
+                        <div style="margin-top: 10px;">
+                            <label><input type="checkbox" checked> Enable 2FA Authentication</label>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label><input type="checkbox" checked> Zero-Knowledge Proofs</label>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4>Compliance Settings</h4>
+                        <div style="margin-top: 10px;">
+                            <label><input type="checkbox" checked> GDPR Compliance</label>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label><input type="checkbox" checked> AML/KYC Integration</label>
+                        </div>
+                    </div>
+                    <button class="btn">Save Settings</button>
+                </div>
+            `;
+        }
+
+        function updateCardForFinance(card) {
+            const metrics = card.querySelector('.metrics');
+            metrics.innerHTML = `
+                <div class="metric">
+                    <div class="metric-value">15</div>
+                    <div class="metric-label">Banking Partners</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$2.5B</div>
+                    <div class="metric-label">Transaction Volume</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">500ms</div>
+                    <div class="metric-label">Settlement Time</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">0.1%</div>
+                    <div class="metric-label">Failure Rate</div>
+                </div>
+            `;
+        }
+
+        function updateCardForSupply(card) {
+            const metrics = card.querySelector('.metrics');
+            metrics.innerHTML = `
+                <div class="metric">
+                    <div class="metric-value">150</div>
+                    <div class="metric-label">Supply Chain Partners</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">1.2M</div>
+                    <div class="metric-label">Products Tracked</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">99.8%</div>
+                    <div class="metric-label">Traceability</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">24/7</div>
+                    <div class="metric-label">Real-time Updates</div>
+                </div>
+            `;
+        }
+
+        function drawRevenueChart() {
+            const canvas = document.getElementById('revenueChart');
+            if (!canvas) {
+                console.log('Canvas not found, retrying...');
+                setTimeout(drawRevenueChart, 100);
+                return;
+            }
+            
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                console.log('Could not get canvas context');
+                return;
+            }
+            
+            // Set canvas dimensions
+            const rect = canvas.getBoundingClientRect();
+            const width = canvas.width = rect.width;
+            const height = canvas.height = 300;
+            
+            // Simple bar chart
+            const data = [2.5, 8.7, 21.3, 45.8, 87.2];
+            const labels = ['Y1', 'Y2', 'Y3', 'Y4', 'Y5'];
+            const barWidth = width / (data.length * 2);
+            const maxValue = Math.max(...data);
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw bars
+            data.forEach((value, index) => {
+                const barHeight = (value / maxValue) * (height - 40);
+                const x = (index * 2 + 0.5) * barWidth;
+                const y = height - barHeight - 20;
+                
+                // Draw bar
+                const gradient = ctx.createLinearGradient(0, y, 0, height - 20);
+                gradient.addColorStop(0, '#667eea');
+                gradient.addColorStop(1, '#764ba2');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, y, barWidth, barHeight);
+                
+                // Draw label
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(labels[index], x + barWidth/2, height - 5);
+                
+                // Draw value
+                ctx.fillText('$' + value + 'M', x + barWidth/2, y - 5);
+            });
+            
+            console.log('Revenue chart drawn successfully');
+        }
+    </script>
+</body>
+</html>
